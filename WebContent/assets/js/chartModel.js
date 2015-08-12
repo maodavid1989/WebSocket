@@ -162,5 +162,5 @@ var margin = {top: 10, right: 40, bottom: 20, left: 40};
 
 		var format = d3.format(',');
 		
-		text = svg.append('text').text('台灣採購經理人指數PMI').attr('x', 0).attr('y', 20).attr('fill', 'black')
+		text = svg.append('text').text('台灣採購經理人指數PMI').attr('x', 0).attr('y', 20).attr('fill', 'green')
 	}

@@ -1,5 +1,5 @@
-url = "ws://localhost:8080/WebSocket/ws"; 
-//url = "ws://52.69.57.216:8080/WebSocket/ws"; 
+//url = "ws://localhost:8080/WebSocket/ws"; 
+url = "ws://52.69.57.216:8080/WebSocket/ws"; 
 ws = new WebSocket(url);
 var interval=7000;//間隔(秒)
 
@@ -58,7 +58,7 @@ $(document).ready(function() {
 });
 
 	function start(){
-		$('a').attr('disabled', true);
+		$('#start').attr('disabled', true);
 		//save to local storage
 		window.localStorage.setItem("stockAll", $('#stockAll').val());		
 		var stock=$('#stockAll').val().split(',');//取得股票代號
