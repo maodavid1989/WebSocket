@@ -1,5 +1,6 @@
 package syscom.com.tw;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
@@ -28,6 +29,8 @@ public class ajaxStockServlet extends AjaxBaseServlet{
     @Override
     protected void executeAjax(HttpServletRequest request, HttpServletResponse response, HttpSession session,
         JSONObject argJsonObj, JSONObject returnJasonObj) throws Exception {
+    	
+    	
         String ajaxAction=request.getParameter("ajaxAction");
         switch(ajaxAction){
         	case "getStockAhref":
@@ -56,32 +59,11 @@ public class ajaxStockServlet extends AjaxBaseServlet{
 //        		JSONObject JObject=new JSONObject(TaiwanIndex);
 //        		this.setFormData(returnJasonObj, JObject);
         		break;
-        	case "getPMI":
-        		logger.info("getPMI 臺灣採購經理人指數");
-        		JSONArray Jarray = new JSONArray();
-        		String urlStr="http://ws.ndc.gov.tw/001/administrator/10/relfile/5781/6391/%E8%87%BA%E7%81%A3%E6%8E%A1%E8%B3%BC%E7%B6%93%E7%90%86%E4%BA%BA%E6%8C%87%E6%95%B8(pmi%E5%8F%8Anmi).xml";
-        		URL url = new URL(urlStr); 
-        		Document PMIxml =  Jsoup.parse(url, 3000);
-        		
-        		JSONObject PMIdata=new JSONObject();
-        		Elements td = PMIxml.select("Data");
-        		
-        		for (int i=0; i<td.size(); i++){
-        			String each=td.get(i).text();
-        			if(each.length()==23){//日期 2015-08-01T00:00:00.000
-        				JSONObject jo= new JSONObject();
-        				jo.put("date",each.substring(0,4)+each.substring(5,7));//201207
-        				jo.put("pmi",td.get(i+1).text());//PMI指數
-        				Jarray.put(jo);
-        			}
-        		}
-        		
-        		logger.info(Jarray);
-        		this.setFormData(returnJasonObj, Jarray);
-        		break;
-
+        	
         }
                    
     }
 	
+
+    
 }
