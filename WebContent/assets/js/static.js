@@ -1,6 +1,7 @@
 $(document).ready(function() {	
-	getPMI();
-	getTWeconomic();
+	getMoneySuppler();
+	//getPMI();
+	//getTWeconomic();
 });
 
 
@@ -28,6 +29,20 @@ $(document).ready(function() {
 	        },
 	        success : function(data, textStatus, xhr) {
 	        	economicChart(data.formData, '.tips2');
+	        }
+	    });		
+	}
+	
+	function getMoneySuppler(){//台灣景氣指標
+	    $.ajax({
+	        async : false,
+	        url : "staticServlet",
+	        dataType : 'json',
+	        data : {
+	            ajaxAction : "getMoneySuppler"
+	        },
+	        success : function(data, textStatus, xhr) {
+	        	moneySupply(data.formData, '.tips4');
 	        }
 	    });		
 	}

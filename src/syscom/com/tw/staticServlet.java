@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import syscom.com.tw.base.AjaxBaseServlet;
@@ -42,7 +43,6 @@ public class staticServlet extends AjaxBaseServlet{
         				Jarray.put(jo);
         			}
         		}
-        		//logger.info(Jarray);
         		this.setFormData(returnJasonObj, Jarray);
         		break;
         	case "getTWeconomic":
@@ -64,10 +64,33 @@ public class staticServlet extends AjaxBaseServlet{
         				}
         			}
         		}
-        		//logger.info(Jarray);
         		this.setFormData(returnJasonObj, Jarray);
         		break;
-        		
+        	case "getMoneySuppler":
+        		logger.info("getMoneySuppler ³f¹ô¨Ñµ¹");
+        		try{
+        			//cnYES ¹d¦ëºô
+	        	    Document doc = Jsoup.connect("http://www.cnyes.com/CentralBank/moneyPolicy6.aspx").timeout(8000).get();
+	        	    Elements link = doc.select("tr");
+	        	    //date
+	        	    int thSize=link.get(1).select("th").size();
+	        	    for( int i=thSize-1; i>=3 ; i--){
+	        	    	String date=link.get(1).select("th").get(i).text();
+//	        	    	logger.info(date.substring(0,4)+date.substring(5,7));//date
+//	        	    	logger.info(link.get(3).select("td").get(i).text());//M1B
+//	        	    	logger.info(link.get(4).select("td").get(i).text());//M2
+	        	    	JSONObject jo= new JSONObject();
+    					jo.put("date",date.substring(0,4)+date.substring(5,7));//date
+    					jo.put("M1B",link.get(3).select("td").get(i).text());//M1B
+    					jo.put("M2",link.get(4).select("td").get(i).text());//M2
+    					Jarray.put(jo);
+	        	    }
+	        	    logger.info(Jarray);
+	        	    this.setFormData(returnJasonObj, Jarray);
+        		}catch(Exception e){
+        			e.printStackTrace();
+        		}
+        		break;
 	        }
 	 }
 	 
