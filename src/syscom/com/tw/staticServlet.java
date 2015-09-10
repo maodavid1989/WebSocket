@@ -85,6 +85,9 @@ public class staticServlet extends AjaxBaseServlet{
     					jo.put("M2",link.get(4).select("td").get(i).text());//M2
     					Jarray.put(jo);
 	        	    }
+	        	    //多最後一個月份
+	        	    Jarray.remove(Jarray.length()-1);
+	        	    
 	        	    logger.info(Jarray);
 	        	    this.setFormData(returnJasonObj, Jarray);
         		}catch(Exception e){

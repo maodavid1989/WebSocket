@@ -1,7 +1,8 @@
 $(document).ready(function() {	
-	getMoneySuppler();
-	//getPMI();
-	//getTWeconomic();
+	getPMI();
+	getTWeconomic();
+	getMoneySupplerM1B();//M1B
+	getMoneySupplerM2();//M2
 });
 
 
@@ -14,7 +15,7 @@ $(document).ready(function() {
 	            ajaxAction : "getPMI"
 	        },
 	        success : function(data, textStatus, xhr) {
-	        	PMIchart(data.formData, '.tips');
+	        	PMIchart(data.formData);
 	        }
 	    });		
 	}
@@ -28,12 +29,12 @@ $(document).ready(function() {
 	            ajaxAction : "getTWeconomic"
 	        },
 	        success : function(data, textStatus, xhr) {
-	        	economicChart(data.formData, '.tips2');
+	        	economicChart(data.formData);
 	        }
 	    });		
 	}
 	
-	function getMoneySuppler(){//台灣景氣指標
+	function getMoneySupplerM1B(){//貨幣供給M1B
 	    $.ajax({
 	        async : false,
 	        url : "staticServlet",
@@ -42,7 +43,21 @@ $(document).ready(function() {
 	            ajaxAction : "getMoneySuppler"
 	        },
 	        success : function(data, textStatus, xhr) {
-	        	moneySupply(data.formData, '.tips4');
+	        	moneySupplyM1B(data.formData);
+	        }
+	    });		
+	}
+	
+	function getMoneySupplerM2(){//貨幣供給M2
+	    $.ajax({
+	        async : false,
+	        url : "staticServlet",
+	        dataType : 'json',
+	        data : {
+	            ajaxAction : "getMoneySuppler"
+	        },
+	        success : function(data, textStatus, xhr) {
+	        	moneySupplyM2(data.formData);
 	        }
 	    });		
 	}
