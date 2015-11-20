@@ -30,15 +30,20 @@
 	}
 	
 @media (min-width: 1000px) {
-  .mycontent
-  {
+  .mycontent{
     font-size: 120%;
+  }
+  span { 
+	  color: blue;
   }
 }
 
 @media (max-width: 600px) {
   .mycontent {
-    width:500px;
     font-size: 70%;
   }
+  span { 
+	  color: green;
+  }
 }
+
