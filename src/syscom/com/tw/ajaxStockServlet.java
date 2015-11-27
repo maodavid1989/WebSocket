@@ -2,6 +2,8 @@ package syscom.com.tw;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
@@ -20,10 +22,10 @@ import syscom.com.tw.base.AjaxBaseServlet;
 import util.StockParserUtil;
 
 
-
 @WebServlet("/ajaxStockServlet")
 public class ajaxStockServlet extends AjaxBaseServlet{
-
+	
+	public List IPArray= new ArrayList();
 	Logger logger = Logger.getLogger(ajaxStockServlet.class);
 
     @Override
@@ -55,15 +57,36 @@ public class ajaxStockServlet extends AjaxBaseServlet{
         		logger.info("----getTaiwanIndex");
 //        		String TaiwanIndex=StockParserUtil.getJsonTaiwanIndex();//¨ú±ohtmldoc
 //        		logger.info(TaiwanIndex);
-//        		
 //        		JSONObject JObject=new JSONObject(TaiwanIndex);
 //        		this.setFormData(returnJasonObj, JObject);
         		break;
-        	
-        }
-                   
-    }
-	
+        	case "addressValid":
+        		logger.info("getRemoteAddr:"+request.getRemoteAddr());        		
+        		boolean pass = true;
+        		if(IPArray.size()==0){
+        			IPArray.add(request.getRemoteAddr());//the first connect
+        		}else{
+            		for(int i=0;i<IPArray.size();i++){
+            			if(IPArray.contains(request.getRemoteAddr())){
+            				logger.info("contains duplicate!");
+            				pass=false;
+            			}else{
+            				IPArray.add(request.getRemoteAddr());
+            			}
+            		}
+        		}
+        		logger.info("List IP : "+IPArray);
+                JSONObject Jpass=new JSONObject();
+                Jpass.put("pass",pass); 
+        		this.setFormData(returnJasonObj, Jpass);
+        		break;
+        	case "closeAddress":
+        		logger.info("----closeIP");
+        		IPArray.remove(request.getRemoteAddr());
+        		logger.info("now IP has: "+IPArray);
+        		this.setFormData(returnJasonObj, "");
+        		break;
 
-    
+        }              
+    }
 }

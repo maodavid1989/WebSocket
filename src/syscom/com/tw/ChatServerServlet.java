@@ -8,6 +8,9 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -18,6 +21,8 @@ import javax.websocket.server.ServerEndpoint;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
+import syscom.com.tw.base.AjaxBaseServlet;
+import syscom.com.tw.base.BaseServlet;
 import util.DateUtil;
 import util.StockParserUtil;
 
@@ -38,6 +43,7 @@ public class ChatServerServlet{
  
     @OnOpen
     public void start(Session session) {
+    	logger.info("onstart");
     	this.session = session;
         connections.add(this);
         JSONObject jsonObj=new JSONObject();
@@ -49,6 +55,7 @@ public class ChatServerServlet{
  
     @OnClose
     public void end() {
+    	logger.info("OnClose");
         connections.remove(this);
         JSONObject jsonObj=new JSONObject();
         jsonObj.put("type", "logout");
@@ -120,5 +127,6 @@ public class ChatServerServlet{
                 broadcastJSON(message);
             }
         }
-    } 
+    }
+
 }

@@ -6,7 +6,6 @@ var interval=7000;//間隔(秒)
 var dataset=[];
 
 $(document).ready(function() {	
-				
 		$('.sidebar').css('overflow','scroll');
 		$('#queryTime').val(interval/1000);
 		//web storage
@@ -18,7 +17,6 @@ $(document).ready(function() {
 			$('#messageTextArea').append("\nconnect to websocket...\n"); 
 		};     
 		ws.onclose = function() {  
-			console.log('websocket closed...');  
 		}; 
 		ws.onmessage = function(message) {  
 			var data=JSON.parse(message.data);
@@ -30,13 +28,9 @@ $(document).ready(function() {
 		    case "logout":
 		        $('#messageTextArea').append(data.name+data.text+'\n');
 		        break;
-		    case "OnMessage":
-		    	break;
 		    case "OnStock":
-
 		    	$('#time').empty().append(data.nowTime);
 		    	//資料圖表產生
-		    	
 				var sl=$('#stockAll').val().split(',').length;
 		    	for(var i=0 ; i<sl ; i++){
 		    		dataset[i].price.push(eval('data.JsonArray'+i)[0]);
@@ -55,30 +49,42 @@ $(document).ready(function() {
 		    	break;
 			}
 		}; 
+		
+		//關閉remove socket limit
+	    $(window).bind("beforeunload", function() { 
+	    	if($('#token').val()){
+	    		closeAddress();
+	    	}
+	    });
 });
 
-	function start(){
-		$('#start').attr('disabled', true);
-		//save to local storage
-		window.localStorage.setItem("stockAll", $('#stockAll').val());		
-		var stock=$('#stockAll').val().split(',');//取得股票代號
-		var sl=stock.length;
-		for(var i=0; i <sl ; i++){
-			var arrayAhref=getStockAhref(stock[i]);//取得最新消息超連結
-			appendStock(stock[i], i, arrayAhref);
-			$('#number'+i).val(stock[i]);
-			dataset.push( { price : [] } );
+	function start(){		
+		if(!addressValid()){
+			alert('請勿重複開啟');
+			return;
+		}else{
+			//save to local storage
+			window.localStorage.setItem("stockAll", $('#stockAll').val());	
+			$('#start').attr('disabled', true);
+			//關閉remove socket limit
+		    $('#token').val("Y");
+			var stock=$('#stockAll').val().split(',');//取得股票代號
+			var sl=stock.length;
+			for(var i=0; i <sl ; i++){
+				var arrayAhref=getStockAhref(stock[i]);//取得最新消息超連結
+				appendStock(stock[i], i, arrayAhref);
+				$('#number'+i).val(stock[i]);
+				dataset.push( { price : [] } );
+			}
+			ws.send(stock);//first time
+			//ws.send("getTaiwanIndex");//first time
+			setInterval(function(){
+				var now =new Date();
+				var msg=now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+				ws.send(stock);  
+				//ws.send("getTaiwanIndex");  
+			},interval);
 		}
-
-		
-		ws.send(stock);//first time
-		//ws.send("getTaiwanIndex"); 	//first time
-		setInterval(function(){
-			var now =new Date();
-			var msg=now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-			ws.send(stock);  
-			//ws.send("getTaiwanIndex");  
-		},interval);
 	}
 	
 	
@@ -120,9 +126,9 @@ $(document).ready(function() {
 			+'<div class="demo'+count+'"></div>'
 		+'</div>'
 		+'<div class="mycontent">'
-			+'<a target=_blank class="fontC" href="'+arrayAhref[0]+'">'+arrayAhref[1]+'</a><br/>'
-			+'<a target=_blank class="fontC" href="'+arrayAhref[2]+'">'+arrayAhref[3]+'</a><br/>'
-			+'<a target=_blank class="fontC" href="'+arrayAhref[4]+'">'+arrayAhref[5]+'</a><br/>'
+			+'<a target=_blank class="hidden-xs"  href="'+arrayAhref[0]+'">'+arrayAhref[1]+'</a><br/>'
+			+'<a target=_blank class="hidden-xs" href="'+arrayAhref[2]+'">'+arrayAhref[3]+'</a><br/>'
+			+'<a target=_blank class="hidden-xs" href="'+arrayAhref[4]+'">'+arrayAhref[5]+'</a><br/>'
 		+'</div></td>'
 		
 		+'</tr></table>');
@@ -155,4 +161,34 @@ $(document).ready(function() {
 	}
 	
 
+    function addressValid(){
+    	var isVal=true;
+    	$.ajax({
+	        async : false,
+	        url : "ajaxStockServlet",
+	        dataType : 'json',
+	        data : {
+	            ajaxAction : "addressValid",
+	        },
+	        success : function(data, textStatus, xhr) {
+	        	isVal=data.formData.pass;
+	        }
+	    });
+    	return isVal;
+    }
     
+    function closeAddress(){
+    	var isVal=true;
+    	$.ajax({
+	        async : false,
+	        url : "ajaxStockServlet",
+	        dataType : 'json',
+	        data : {
+	            ajaxAction : "closeAddress",
+	        },
+	        success : function(data, textStatus, xhr) {
+
+	        }
+	    });
+
+    }
