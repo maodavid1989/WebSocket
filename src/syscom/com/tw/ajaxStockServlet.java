@@ -3,8 +3,10 @@ package syscom.com.tw;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +27,7 @@ import util.StockParserUtil;
 @WebServlet("/ajaxStockServlet")
 public class ajaxStockServlet extends AjaxBaseServlet{
 	
-	public List IPArray= new ArrayList();
+	public static final Set<String> ipSet = new HashSet<String>();
 	Logger logger = Logger.getLogger(ajaxStockServlet.class);
 
     @Override
@@ -60,30 +62,24 @@ public class ajaxStockServlet extends AjaxBaseServlet{
 //        		JSONObject JObject=new JSONObject(TaiwanIndex);
 //        		this.setFormData(returnJasonObj, JObject);
         		break;
-        	case "addressValid":
-        		logger.info("getRemoteAddr:"+request.getRemoteAddr());        		
-        		boolean pass = true;
-        		if(IPArray.size()==0){
-        			IPArray.add(request.getRemoteAddr());//the first connect
-        		}else{
-            		for(int i=0;i<IPArray.size();i++){
-            			if(IPArray.contains(request.getRemoteAddr())){
-            				logger.info("contains duplicate!");
-            				pass=false;
-            			}else{
-            				IPArray.add(request.getRemoteAddr());
-            			}
+        	case "addressValid":       		
+        		boolean pass = true;//default
+            	for(int i=0;i<ipSet.size();i++){
+            		if(ipSet.contains(request.getRemoteAddr())){
+            			pass=false;
+            		}else{
+            			ipSet.add(request.getRemoteAddr());
             		}
         		}
-        		logger.info("List IP : "+IPArray);
+            	
+        		logger.info("List IP : "+ipSet);
                 JSONObject Jpass=new JSONObject();
                 Jpass.put("pass",pass); 
         		this.setFormData(returnJasonObj, Jpass);
         		break;
         	case "closeAddress":
-        		logger.info("----closeIP");
-        		IPArray.remove(request.getRemoteAddr());
-        		logger.info("now IP has: "+IPArray);
+        		ipSet.remove(request.getRemoteAddr());
+        		logger.info("websocket connect IP : "+ipSet);
         		this.setFormData(returnJasonObj, "");
         		break;
 

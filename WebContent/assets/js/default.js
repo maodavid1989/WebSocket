@@ -1,5 +1,5 @@
-url = "ws://localhost:8084/WebSocket/ws"; 
-//url = "ws://52.69.57.216:8080/WebSocket/ws"; 
+//url = "ws://localhost:8084/WebSocket/ws"; 
+url = "ws://52.69.57.216:8080/WebSocket/ws"; 
 ws = new WebSocket(url);
 var interval=7000;//間隔(秒)
 
