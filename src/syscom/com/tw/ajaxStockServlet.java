@@ -40,7 +40,7 @@ public class ajaxStockServlet extends AjaxBaseServlet{
         	case "getStockAhref":
         		logger.info("----getStockAhref");
                 String SN=request.getParameter("stockNumber");
-                Document xmlDoc=StockParserUtil.getHTMLDoc(SN);//取得htmldoc
+                Document xmlDoc=StockParserUtil.getHTMLDoc(SN);//嚙踝蕭ohtmldoc
                 StockParserUtil sp= new StockParserUtil();
         		Map stockAhref=sp.getAhref(xmlDoc);
                 
@@ -57,19 +57,24 @@ public class ajaxStockServlet extends AjaxBaseServlet{
                 break;
         	case "getTaiwanIndex":
         		logger.info("----getTaiwanIndex");
-//        		String TaiwanIndex=StockParserUtil.getJsonTaiwanIndex();//取得htmldoc
+//        		String TaiwanIndex=StockParserUtil.getJsonTaiwanIndex();//htmldoc
 //        		logger.info(TaiwanIndex);
 //        		JSONObject JObject=new JSONObject(TaiwanIndex);
 //        		this.setFormData(returnJasonObj, JObject);
         		break;
-        	case "addressValid":       		
+        	case "addressValid":       
+        		logger.info("into addressValid");
         		boolean pass = true;//default
-            	for(int i=0;i<ipSet.size();i++){
-            		if(ipSet.contains(request.getRemoteAddr())){
-            			pass=false;
-            		}else{
-            			ipSet.add(request.getRemoteAddr());
-            		}
+        		if(ipSet.size()==0){
+        			ipSet.add(request.getRemoteAddr());
+        		}else{
+	            	for(int i=0;i<ipSet.size();i++){
+	            		if(ipSet.contains(request.getRemoteAddr())){
+	            			pass=false;
+	            		}else{
+	            			ipSet.add(request.getRemoteAddr());
+	            		}
+	        		}
         		}
             	
         		logger.info("List IP : "+ipSet);

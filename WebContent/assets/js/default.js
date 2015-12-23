@@ -2,7 +2,6 @@
 url = "ws://52.69.57.216:8080/WebSocket/ws"; 
 ws = new WebSocket(url);
 var interval=7000;//間隔(秒)
-
 var dataset=[];
 
 $(document).ready(function() {	
